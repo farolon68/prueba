@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CINE EL LORA TV</title>
+    <style>
+        /* DISEÑO ORIGINAL CINE EL LORA */
+        body { 
+            font-family: sans-serif; 
+            background-color: #121212; 
+            color: white; 
+            margin: 0; 
+            padding: 0; 
+            overflow-x: hidden;
+        }
+
+        /* ENCABEZADO FIJO Y ESTRECHO */
+        .header-container { 
+            position: sticky; 
+            top: 0; 
+            background: #1a1a1a; 
+            padding: 5px 10px; 
+            z-index: 9999; 
+            border-bottom: 1px solid #333; 
+            text-align: center;
+        }
+
+        h2 { 
+            color: #ff9800; 
+            margin: 0 0 5px 0; 
+            font-size: 1rem; 
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        #buscador {
+            width: 80%; 
+            max-width: 400px; 
+            padding: 8px 15px; 
+            border-radius: 20px; 
+            border: 1px solid #ff9800;
+            background: #222; 
+            color: white; 
+            font-size: 0.9rem; 
+            outline: none;
+        }
+
+        /* FOCO BLANCO BRILLANTE (EL QUE TE GUSTA) */
+        /* Eliminamos el box-shadow como pediste antes, solo borde y fondo blanco */
+        #buscador:focus, .btn-wise:focus {
+            background-color: #ffffff !important;
+            color: #000000 !important;
+            border-color: #ffffff !important;
+            transform: scale(1.02);
+            outline: none !important;
+        }
+
+        /* GRILLA DE BOTONES */
+        .grid-container {
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 12px; 
+            padding: 15px;
+            max-width: 1200px; 
+            margin: 0 auto;
+        }
+
+        /* BOTONES ESTILO LISTA */
+        .btn-wise {
+            background-color: #1e1e1e; 
+            color: white; 
+            padding: 15px; 
+            text-decoration: none;
+            border-radius: 8px; 
+            font-weight: bold; 
+            border: 1px solid #333;
+            display: block; 
+            text-align: left;
+            outline: none;
+        }
+
+        .btn-wise span { 
+            display: block; 
+            font-size: 0.75rem; 
+            color: #888; 
+            margin-top: 3px; 
+            font-weight: normal;
+        }
+
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+    <div class="header-container">
+        <h2>🇪🇸🇪🇸-CINE EL LORA-🇪🇸🇪🇸</h2>
+        <!-- Clase 'nav' para que el script lo encuentre -->
+        <input type="text" id="buscador" class="nav" placeholder="BUSCAR VIDEO..." onkeyup="filtrar()">
+    </div>
+
+    <div class="grid-container" id="contenedor">
+        <!-- Ejemplo de botones con clase 'nav' y tabindex -->
+        <a class="btn-wise nav" tabindex="0" href="intent://abstream.to/e/jdrs06p22yu3#Intent;scheme=http;action=android.intent.action.VIEW;type=video/*;package=com.wiseplay;S.android.intent.extra.TITLE=Afterburn;end">AFTERBURN</a>
+
+        <a class="btn-wise nav" tabindex="0" href="intent://abstream.to/e/yvqt8sj2bjbb#Intent;scheme=http;action=android.intent.action.VIEW;type=video/*;package=com.wiseplay;S.android.intent.extra.TITLE=Acosada;end">ACOSADA</a>
+
+        <a class="btn-wise nav" tabindex="0" href="intent://abstream.to/e/f77o3qjsmvjw#Intent;scheme=http;action=android.intent.action.VIEW;type=video/*;package=com.wiseplay;S.android.intent.extra.TITLE=La sospecha de Sofia;end">LA SOSPECHA DE SOFIA</a>
+
+        <a class="btn-wise nav" tabindex="0" href="intent://abstream.to/e/r48kcvgga5c1#Intent;scheme=http;action=android.intent.action.VIEW;type=video/*;package=com.wiseplay;S.android.intent.extra.TITLE=Los Muertimer;end">LOS MUERTIMER</a>
+        
+        <a class="btn-wise nav" tabindex="0" href="intent://luluvid.com/e/oghhdn2v1w9e#Intent;scheme=http;action=android.intent.action.VIEW;type=video/*;package=com.wiseplay;S.android.intent.extra.TITLE=Predators;end">PREDATORS</a>
+
+        <a class="btn-wise nav" tabindex="0" href="intent://abstream.to/e/r48kcvgga5c1#Intent;scheme=http;action=android.intent.action.VIEW;type=video/*;package=com.wiseplay;S.android.intent.extra.TITLE=Los Muertimer;end">LOS MUERTIMER</a>
+
+
+    </div>
+
+    <script>
+        const navItems = document.getElementsByClassName('nav');
+
+        // LÓGICA DE NAVEGACIÓN MANUAL (LA QUE SÍ FUNCIONA EN TU TV)
+        document.addEventListener('keydown', function(e) {
+            let current = document.activeElement;
+            // Filtramos solo los elementos que no están ocultos por el buscador
+            let items = Array.from(navItems).filter(i => i.offsetParent !== null);
+            let index = items.indexOf(current);
+
+            // Si no hay nada seleccionado, empezamos por el buscador
+            if (index === -1) { items[0].focus(); return; }
+
+            let target = index;
+            // Calculamos cuántas columnas hay en la grilla dinámicamente
+            let grid = document.getElementById('contenedor');
+            let cols = window.getComputedStyle(grid).getPropertyValue("grid-template-columns").split(" ").length;
+
+            if (e.keyCode === 39) target = index + 1; // DERECHA
+            else if (e.keyCode === 37) target = index - 1; // IZQUIERDA
+            else if (e.keyCode === 40) { // ABAJO
+                if (index === 0) target = 1; // Del buscador al primer botón
+                else target = index + cols;
+            }
+            else if (e.keyCode === 38) { // ARRIBA
+                if (index <= cols && index > 0) target = 0; // De la primera fila al buscador
+                else if (index > cols) target = index - cols;
+            }
+            else if (e.keyCode === 13) { // ENTER / OK
+                current.click();
+            }
+
+            // Movemos el foco si el destino existe
+            if (items[target]) {
+                items[target].focus();
+                e.preventDefault();
+            }
+        });
+
+        function filtrar() {
+            let q = document.getElementById('buscador').value.toUpperCase();
+            let b = document.getElementsByClassName('btn-wise');
+            for (let i = 0; i < b.length; i++) {
+                let texto = b[i].innerText.toUpperCase();
+                if (texto.indexOf(q) > -1) {
+                    b[i].classList.remove('hidden');
+                } else {
+                    b[i].classList.add('hidden');
+                }
+            }
+        }
+
+        // Al cargar, forzar el foco en el buscador
+        window.onload = () => document.getElementById('buscador').focus();
+    </script>
+</body>
+</html>
+
